@@ -14,8 +14,14 @@
             </div>
             <div class="activities-select">
                 <h3>Activities</h3>
-                <span v-for="activity in activities" class="activity-pill" :key="activity.id">
-                    {{ activity.name }}
+                <span v-for="activity in activities" class="activity-pill" :key="activity.id" >
+                    <input type="checkbox"
+                        class="pill-checkbox"
+                        :id="activity.id"
+                        :value="activity.id"
+                        @change="selectActivity"
+                    >
+                    <label :for="activity.id"> {{ activity.name }} </label>
                 </span>
             </div>
         </form>
@@ -31,6 +37,7 @@ export default {
     data () {
         return {
             activities: [],
+            selectedActivities: [],
             name: null,
             reps: null,
             sets: null,
@@ -41,6 +48,33 @@ export default {
     methods: {
         addProgram () {
             alert('ok')
+            db.collection('programs').add({
+                program_code: this.program_code,
+                name: this.name,
+                description: this.description,
+                activities: this.selectedActivities
+            })
+        },
+        selectActivity (evt) {
+            const { value } = evt.target
+            
+            const index = this.selectedActivities.findIndex(c => c === value)
+            if (index !== -1) {
+                this.selectedActivities = [
+                    ...this.selectedActivities.slice(0, index),
+                    ...this.selectedActivities.slice(index + 1),
+                ]
+            } else {
+                const activity_data = this.activities.find(a => a.id === value)
+
+                this.selectedActivities = [
+                    ...this.selectedActivities,
+                    activity_data
+                ]
+            }
+
+            console.log(this.selectedActivities)
+
         }
     },
     mounted () {
@@ -122,12 +156,22 @@ export default {
     outline: none;
 }
 
-.activity-pill {
+.activity-pill label {
     padding: 5px 10px;
     margin: 5px;
     background: #fff;
     border-radius: 15px;
     border: solid 2px #aaaaaa;
     cursor: pointer;
+}
+
+.activity-pill input {
+    display: none;
+}
+
+.pill-checkbox:checked ~ label {
+    background: #23ccff;
+    border: solid 2px #1c1cff;
+    color: #fff;
 }
 </style>
