@@ -47,13 +47,14 @@ export default {
     },
     methods: {
         addProgram () {
-            alert('ok')
             db.collection('programs').add({
                 program_code: this.program_code,
                 name: this.name,
                 description: this.description,
                 activities: this.selectedActivities
             })
+            .then(docRef => console.log(docRef))
+            .catch(error => console.error(error))
         },
         selectActivity (evt) {
             const { value } = evt.target
