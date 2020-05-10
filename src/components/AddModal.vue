@@ -1,16 +1,21 @@
 <template>
-    <div id="form-program">
+  <div id="modal-add">
+      <div class="container">
         <form @submit.prevent="addProgram" id="form-container">
             <div class="main-form">
                 <h3>Program Details</h3>
-                <input type="text" v-model="program_code" placeholder="Code" >
-                <input type="text" v-model="name" placeholder="Name" >
-                <input type="text" v-model="description" placeholder="Description" >
-                <div class="button-container">
-                    <button type="reset" class="reset">Reset</button>
-                    <button type="button" class="cancel">Cancel</button>
-                    <button type="submit" class="submit">Submit</button>
+                <div class="input-container">
+                  <input type="text" v-model="program_code" placeholder="Code" >
                 </div>
+                <div class="input-container">
+                  <input type="text" v-model="name" placeholder="Name" >
+                </div>
+                <div class="input-container">
+                  <input type="text" v-model="description" placeholder="Description" >
+                </div>
+                <!-- <div class="button-container">
+                    <button type="button" class="cancel">Cancel</button>
+                </div> -->
             </div>
             <div class="activities-select">
                 <h3>Activities</h3>
@@ -24,42 +29,65 @@
                     <label :for="activity.id"> {{ activity.name }} </label>
                 </span>
             </div>
+            <div class="btn-container">
+          <button
+            class="closeActivityModal"
+            @click="closeModal">
+              CLOSE
+            </button>
+            <button type="reset" class="reset">Reset</button>
+            <button type="submit" class="submit">Submit</button>
+
+        </div>
         </form>
-    </div>
+      </div>
+  </div>
 </template>
 
-<script>
-import db from '@/components/firebaseInit.js'
-
+<script scoped>
 /* eslint-disable */
+
 export default {
-    name: 'form-program',
+    name: 'AddModal',
+    props: {
+      activities: Array
+    },
     data () {
-        return {
-            activities: [],
-            selectedActivities: [],
-            name: null,
-            reps: null,
-            sets: null,
-            description: null,
-            program_code: null
-        }
+      return {
+        selectedActivities: [],
+        name: null,
+        reps: null,
+        sets: null,
+        description: null,
+        program_code: null
+      }
     },
     methods: {
-        addProgram () {
+      closeModal () {
+        this.$emit('close')
+      },
+      addProgram () {
+          if ( this.program_code && this.name && this.description && this.activities.length) {
             db.collection('programs').add({
                 program_code: this.program_code,
                 name: this.name,
                 description: this.description,
                 activities: this.selectedActivities
             })
-            .then(docRef => console.log(docRef))
+            .then(docRef => {
+              document.querySelector('#form-container').reset()
+              this.closeModal()
+            })
             .catch(error => console.error(error))
+          }
+          else {
+            alert('All fields required!')
+          }
         },
         selectActivity (evt) {
             const { value } = evt.target
             
-            const index = this.selectedActivities.findIndex(c => c === value)
+            const index = this.selectedActivities.findIndex(c => c.id === value)
             if (index !== -1) {
                 this.selectedActivities = [
                     ...this.selectedActivities.slice(0, index),
@@ -78,35 +106,32 @@ export default {
 
         }
     },
-    mounted () {
-        db.collection('activities').get()
-        .then (querySnapshot => {
-            querySnapshot.forEach(doc => {
-                const data = {
-                    'id': doc.id,
-                    'name': doc.data().name,
-                    'reps': doc.data().reps,
-                    'sets': doc.data().sets
-                }
-
-                this.activities = [
-                     ...this.activities,
-                    data
-                ]
-                
-            })
-            console.log(this.activities)
-        })
-        .catch (err => {
-            console.error(err)
-        })
+    mounted() {
+      console.log('opened')
     }
 }
 </script>
 
 <style>
+#modal-add {
+  background: rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+}
+.container {
+  width: 85%;
+  background: #fff;
+  margin: auto;
+}
+
 #form-container {
-    display: flex;
+    display: grid;
     grid-template-columns: 1fr 1fr;
 }
 
@@ -120,22 +145,32 @@ export default {
     -webkit-box-shadow: 3px 3px 5px #ccc;
     -moz-box-shadow: 3px 3px 5px #ccc;
     box-shadow: 3px 3px 5px #ccc;
-    width: 50%;
 }
 
 .main-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+  position: relative;
+  padding: 10px;
+}
+
+.input-container {
+  position: relative;
+  margin: 10px;
 }
 
 .main-form input {
-    grid-column: 1/4;
-    padding: 5px 10px;
-    margin: 5px;
     background: #fff;
     border-radius: 3px;
     border: solid 1px #aaaaaa;
+    width: calc(100% - 16px);
+    height: 2em;
+    padding: 0 8px;
+    margin: 0;
 }
+
+.main-form h3 {
+    grid-column: 1/4;
+}
+
 .button-container {
     grid-column: 1/4;
     display: flex;
@@ -149,11 +184,9 @@ export default {
 }
 
 .main-form input:active, .main-form input:focus {
-    padding: 5px 10px;
-    margin: 5px;
     background: #fff;
     border-radius: 3px;
-    border: solid 1px #5532ef;
+    border: solid 1px #1aee00;
     outline: none;
 }
 
@@ -171,8 +204,30 @@ export default {
 }
 
 .pill-checkbox:checked ~ label {
-    background: #23ccff;
-    border: solid 2px #1c1cff;
+    background: #7dee7f;
+    border: solid 2px #11a536;
     color: #fff;
+}
+
+.btn-container {
+  grid-column: 2/3;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 15px;
+}
+
+.btn-container button {
+  padding: 10px 10px;
+  background: #fff;
+  margin: 5px;
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.btn-container button:active, .btn-container button:focus {
+  outline: none;
+  border: solid 1px #1aee00;
+  transition: border ease-out .2s;
 }
 </style>
