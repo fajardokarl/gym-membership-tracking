@@ -30,15 +30,13 @@
                 </span>
             </div>
             <div class="btn-container">
-          <button
-            class="closeActivityModal"
-            @click="closeModal">
-              CLOSE
-            </button>
-            <button type="reset" class="reset">Reset</button>
-            <button type="submit" class="submit">Submit</button>
-
-        </div>
+                <button
+                    class="closeActivityModal"
+                    @click="closeModal"> CLOSE
+                </button>
+                <button type="reset" class="reset"> Reset </button>
+                <button type="submit" class="submit"> Save </button>
+            </div>
         </form>
       </div>
   </div>
@@ -46,6 +44,7 @@
 
 <script scoped>
 /* eslint-disable */
+import db from '@/components/firebaseInit.js'
 
 export default {
     name: 'AddProgramModal',
@@ -78,7 +77,7 @@ export default {
               document.querySelector('#form-container').reset()
               this.closeModal()
             })
-            .catch(error => console.error(error))
+            .catch(err => console.error(err))
           }
           else {
             alert('All fields required!')
@@ -112,10 +111,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #modal-add {
-  background: rgba(0, 0, 0, 0.3);
-  position: absolute;
+  background: rgba(0, 0, 0, 0.2);
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -125,9 +124,14 @@ export default {
   align-items: center;
 }
 .container {
+  border: solid 1px #ccc;
+  border-radius: 5px;
   width: 85%;
   background: #fff;
   margin: auto;
+  -webkit-box-shadow: 3px 3px 5px #ccc;
+  -moz-box-shadow: 3px 3px 5px #ccc;
+  box-shadow: 3px 3px 5px #ccc;
 }
 
 #form-container {
@@ -141,53 +145,28 @@ export default {
     background: #fff;
     padding: 1.2em;
     margin: 1em;
-    border-radius: 3px;
+    border-radius: 5px;
     -webkit-box-shadow: 3px 3px 5px #ccc;
     -moz-box-shadow: 3px 3px 5px #ccc;
     box-shadow: 3px 3px 5px #ccc;
+    border: 1px solid #ccc;
+
+}
+
+.activities-select {
+    line-height: 2.5;
+    word-break: keep-all;
 }
 
 .main-form {
-  position: relative;
-  padding: 10px;
-}
-
-.input-container {
-  position: relative;
-  margin: 10px;
-}
-
-.main-form input {
-    background: #fff;
-    border-radius: 3px;
-    border: solid 1px #aaaaaa;
-    width: calc(100% - 16px);
-    height: 2em;
-    padding: 0 8px;
-    margin: 0;
-}
-
-.main-form h3 {
-    grid-column: 1/4;
+	position: relative;
+	padding: 10px;
 }
 
 .button-container {
     grid-column: 1/4;
     display: flex;
     justify-content: space-between;    
-}
-
-.button-container button {
-    padding: 5px 10px;
-    margin: 5px;
-    width: 100%;
-}
-
-.main-form input:active, .main-form input:focus {
-    background: #fff;
-    border-radius: 3px;
-    border: solid 1px #1aee00;
-    outline: none;
 }
 
 .activity-pill label {
@@ -204,30 +183,15 @@ export default {
 }
 
 .pill-checkbox:checked ~ label {
-    background: #7dee7f;
-    border: solid 2px #11a536;
+    background: #11a536;
+    border: solid 2px #555;
     color: #fff;
 }
 
 .btn-container {
-  grid-column: 2/3;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  padding: 15px;
-}
-
-.btn-container button {
-  padding: 10px 10px;
-  background: #fff;
-  margin: 5px;
-  border: solid 1px #ccc;
-  border-radius: 5px;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-.btn-container button:active, .btn-container button:focus {
-  outline: none;
-  border: solid 1px #1aee00;
-  transition: border ease-out .2s;
+	grid-column: 2/3;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	padding: 15px;
 }
 </style>

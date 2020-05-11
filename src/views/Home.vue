@@ -6,12 +6,22 @@
       >
         ADD PROGRAM
       </button>
+      <button
+        @click="openActivityModal"
+      >
+        ADD ACTIVITY
+      </button>
     </div>
     <Programs />
     <AddProgramModal
-      v-if="activityModalOpen"
+      v-if="programModalOpen"
       :activities="activities"
       @close="closeModal"
+    />
+    <AddActivityModal
+        v-if="activityModalOpen"
+        @close="closeModal"
+        @saveToActivities="saveToActivities"
     />
   </div>
 </template>
@@ -19,28 +29,42 @@
 <script>
 /* eslint-disable */
 
-import Programs from '@/components/Programs.vue'
-import AddProgramModal from '@/components/AddProgramModal.vue'
+import Programs from '@/components/Programs'
+import AddProgramModal from '@/components/AddProgramModal'
+import AddActivityModal from '@/components/AddActivityModal'
 import db from '@/components/firebaseInit.js'
 
 export default {
   name: 'Home',
   components: {
     Programs,
-    AddProgramModal
+    AddProgramModal,
+    AddActivityModal,
+
   },
   data () {
     return {
       activities: [],
+      programModalOpen: false,
       activityModalOpen: false
     }
   },
   methods: {
     openModal () {
+      this.programModalOpen = true
+    },
+    openActivityModal () {
       this.activityModalOpen = true
     },
     closeModal () {
+      this.programModalOpen = false
       this.activityModalOpen = false
+    },
+    saveToActivities(val) {
+        this.activities = [
+            ...this.activities, val
+        ]
+        console.log(`${val} Added`)
     }
   },
   mounted () {

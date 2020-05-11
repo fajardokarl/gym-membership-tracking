@@ -17,8 +17,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  background: #f8f8f8;
-  height: 100vh;
+  background: #fff;
 }
 
 #nav {
@@ -32,5 +31,51 @@ body {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.btn-container button {
+  padding: 10px 10px;
+  background: #fff;
+  margin: 5px;
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.btn-container button:active, .btn-container button:focus {
+  outline: none;
+  border: solid 1px #1aee00;
+  transition: border ease-out .2s;
+}
+
+.btn-container > button:hover {
+  background: #7dee7f !important;
+  color: white;
+}
+
+.input-container {
+  position: relative;
+  margin: 10px;
+}
+
+.main-form input {
+  background: #fff;
+  border-radius: 3px;
+  border: solid 1px #aaaaaa;
+  width: calc(100% - 16px);
+  height: 2em;
+  padding: 0 8px;
+  margin: 0;
+}
+
+.main-form h3 {
+  grid-column: 1/4;
+}
+
+.main-form input:active, .main-form input:focus {
+  background: #fff;
+  border-radius: 3px;
+  border: solid 1px #1aee00;
+  outline: none;
 }
 </style>

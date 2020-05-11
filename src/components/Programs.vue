@@ -79,6 +79,7 @@ export default {
         -webkit-box-shadow: 3px 3px 5px #ccc;
        -moz-box-shadow: 3px 3px 5px #ccc;
         box-shadow: 3px 3px 5px #ccc;
+        border: 1px solid #ccc;
     }
 
     .programm-wrapper ul li {
