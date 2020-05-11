@@ -8,7 +8,7 @@
       </button>
     </div>
     <Programs />
-    <AddModal
+    <AddProgramModal
       v-if="activityModalOpen"
       :activities="activities"
       @close="closeModal"
@@ -20,14 +20,14 @@
 /* eslint-disable */
 
 import Programs from '@/components/Programs.vue'
-import AddModal from '@/components/AddModal.vue'
+import AddProgramModal from '@/components/AddProgramModal.vue'
 import db from '@/components/firebaseInit.js'
 
 export default {
   name: 'Home',
   components: {
     Programs,
-    AddModal
+    AddProgramModal
   },
   data () {
     return {

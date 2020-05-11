@@ -48,7 +48,7 @@
 /* eslint-disable */
 
 export default {
-    name: 'AddModal',
+    name: 'AddProgramModal',
     props: {
       activities: Array
     },
