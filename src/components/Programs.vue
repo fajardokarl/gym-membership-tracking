@@ -1,7 +1,9 @@
 <template>
     <div id="programs">
         <div class="programm-wrapper">
-            <ul v-for="program in programs" :key="program.id">
+            <ul
+                @click="editProgram(program)"
+            >
                 <li>
                     <span>
                         CODE:
@@ -28,39 +30,17 @@
 </template>
 
 <script>
-import db from './firebaseInit'
 /* eslint-disable */
 export default {
     name: "Programs",
-    data () {
-        return {
-            programs: []
+    props: {
+        program: Object
+    },
+    methods: {
+        editProgram (program) {
+            this.$emit('selectProgram', this.program)
         }
     },
-    mounted () {
-        db.collection('programs').get()
-        .then (querySnapshot => {
-            querySnapshot.forEach(doc => {
-                const data = {
-                    'id': doc.id,
-                    'code': doc.data().program_code,
-                    'name': doc.data().name,
-                    'description': doc.data().description,
-                    'activities': doc.data().activities
-                }
-
-                this.programs = [
-                     ...this.programs,
-                    data
-                ]
-                
-            })
-            console.log(this.programs)
-        })
-        .catch (err => {
-            console.error(err)
-        })
-    }
 }
 </script>
 
@@ -77,9 +57,19 @@ export default {
         margin: 1em;
         border-radius: 8px;
         -webkit-box-shadow: 3px 3px 5px #ccc;
-       -moz-box-shadow: 3px 3px 5px #ccc;
+        -moz-box-shadow: 3px 3px 5px #ccc;
         box-shadow: 3px 3px 5px #ccc;
         border: 1px solid #ccc;
+        cursor: pointer;
+        transition: transform .2s ease-in-out,
+            box-shadow .2s ease-in-out;
+    }
+    .programm-wrapper > ul:hover {
+        transform: translate3d(0, -8px, 50px);
+        -webkit-box-shadow: 3px 5px 8px #ccc;
+        -moz-box-shadow: 3px 5px 8px #ccc;
+        box-shadow: 3px 5px 8px #ccc;
+        background: rgba(206, 238, 247, 0.5);
     }
 
     .programm-wrapper ul li {

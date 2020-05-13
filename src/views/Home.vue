@@ -12,10 +12,15 @@
         ADD ACTIVITY
       </button>
     </div>
-    <Programs />
+    <Programs
+        v-for="program in programs" :key="program.id"
+        :program="program"
+        @selectProgram="selectProgram"
+    />
     <AddProgramModal
       v-if="programModalOpen"
       :activities="activities"
+      :selectedProgram="selectedProgram"
       @close="closeModal"
     />
     <AddActivityModal
@@ -40,56 +45,92 @@ export default {
     Programs,
     AddProgramModal,
     AddActivityModal,
-
   },
   data () {
     return {
-      activities: [],
-      programModalOpen: false,
-      activityModalOpen: false
+        activities: [],
+        programs: [],
+        programModalOpen: false,
+        activityModalOpen: false,
+        selectedProgram: null
     }
   },
-  methods: {
-    openModal () {
-      this.programModalOpen = true
+    watch: {
+        selectedProgram (val) {
+            // if (val) {
+            //     this.programModalOpen = true
+            // } else {
+            //     this.programModalOpen = false
+            // }
+        }
     },
-    openActivityModal () {
-      this.activityModalOpen = true
-    },
-    closeModal () {
-      this.programModalOpen = false
-      this.activityModalOpen = false
-    },
-    saveToActivities(val) {
-        this.activities = [
-            ...this.activities, val
-        ]
-        console.log(`${val} Added`)
-    }
-  },
-  mounted () {
-    db.collection('activities').get()
-      .then (querySnapshot => {
-        querySnapshot.forEach(doc => {
-          const data = {
-            'id': doc.id,
-            'name': doc.data().name,
-            'reps': doc.data().reps,
-            'sets': doc.data().sets
-          }
+    methods: {
+        openModal () {
+            this.programModalOpen = true
+        },
+        openActivityModal () {
+            this.activityModalOpen = true
+        },
+        closeModal () {
+            this.selectedProgram = null
 
-          this.activities = [
-            ...this.activities,
-            data
-          ]
-              
-          })
-          console.log('home', this.activities)
-      })
-      .catch (err => {
-        console.error(err)
-      })
-  }
+            this.programModalOpen = false
+            this.activityModalOpen = false
+        },
+        saveToActivities(val) {
+            this.activities = [
+                ...this.activities, val
+            ]
+            console.log(`${val} Added`)
+        },
+        selectProgram (program) {
+            this.selectedProgram = program
+            this.programModalOpen = true
+        }
+    },
+    mounted () {
+        db.collection('activities').get()
+        .then (querySnapshot => {
+            querySnapshot.forEach(doc => {
+            const data = {
+                'id': doc.id,
+                'name': doc.data().name,
+                'reps': doc.data().reps,
+                'sets': doc.data().sets
+            }
+
+            this.activities = [
+                ...this.activities,
+                data
+            ]
+                
+            })
+        })
+        .catch (err => {
+            console.error(err)
+        })
+        db.collection('programs').get()
+            .then (querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    const data = {
+                        'id': doc.id,
+                        'code': doc.data().program_code,
+                        'name': doc.data().name,
+                        'description': doc.data().description,
+                        'activities': doc.data().activities
+                    }
+
+                    this.programs = [
+                        ...this.programs,
+                        data
+                    ]
+                    
+                })
+            })
+            .catch (err => {
+                console.error(err)
+            })
+    }
 }
 </script>
 

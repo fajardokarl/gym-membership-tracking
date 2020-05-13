@@ -25,12 +25,14 @@
                         :id="activity.id"
                         :value="activity.id"
                         @change="selectActivity"
+                        :checked="isActivitySelected(activity.id)"
                     >
                     <label :for="activity.id"> {{ activity.name }} </label>
                 </span>
             </div>
             <div class="btn-container">
                 <button
+                    type="button"
                     class="closeActivityModal"
                     @click="closeModal"> CLOSE
                 </button>
@@ -49,7 +51,8 @@ import db from '@/components/firebaseInit.js'
 export default {
     name: 'AddProgramModal',
     props: {
-      activities: Array
+      activities: Array,
+      selectedProgram: Object
     },
     data () {
       return {
@@ -58,30 +61,33 @@ export default {
         reps: null,
         sets: null,
         description: null,
-        program_code: null
+        program_code: null,
+        program_id: this.selectedProgram.id || ''
       }
     },
     methods: {
-      closeModal () {
-        this.$emit('close')
-      },
-      addProgram () {
-          if ( this.program_code && this.name && this.description && this.activities.length) {
-            db.collection('programs').add({
-                program_code: this.program_code,
-                name: this.name,
-                description: this.description,
-                activities: this.selectedActivities
-            })
-            .then(docRef => {
-              document.querySelector('#form-container').reset()
-              this.closeModal()
-            })
-            .catch(err => console.error(err))
-          }
-          else {
-            alert('All fields required!')
-          }
+        closeModal () {
+            this.$emit('close')
+        },
+        addProgram () {
+            const programRef = db.collection('programs').doc(this.program_id)
+            // Add document if programRef does not exist
+            if ( this.program_code && this.name && this.description && this.activities.length) {
+                programRef.set({
+                    program_code: this.program_code,
+                    name: this.name,
+                    description: this.description,
+                    activities: this.selectedActivities
+                })
+                .then(docRef => {
+                document.querySelector('#form-container').reset()
+                this.closeModal()
+                })
+                .catch(err => console.error(err))
+            }
+            else {
+                alert('All fields required!')
+            }
         },
         selectActivity (evt) {
             const { value } = evt.target
@@ -100,13 +106,24 @@ export default {
                     activity_data
                 ]
             }
-
-            console.log(this.selectedActivities)
-
+        },
+        isActivitySelected (actId) {
+            if (this.selectedProgram) {
+                const isSelected = this.selectedProgram.activities.some(val => val.id === actId)
+                return isSelected
+            }
         }
     },
     mounted() {
-      console.log('opened')
+        if (this.selectedProgram) {
+            // Assign values of selected program to v-model data
+            this.program_code = this.selectedProgram.code
+            this.name = this.selectedProgram.name
+            this.description = this.selectedProgram.description
+
+            // check present activities
+            this.selectedActivities = this.selectedProgram.activities
+        }
     }
 }
 </script>
