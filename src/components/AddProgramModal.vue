@@ -62,7 +62,7 @@ export default {
         sets: null,
         description: null,
         program_code: null,
-        program_id: this.selectedProgram.id || ''
+        program_id: null
       }
     },
     methods: {
@@ -120,7 +120,8 @@ export default {
             this.program_code = this.selectedProgram.code
             this.name = this.selectedProgram.name
             this.description = this.selectedProgram.description
-
+            this.program_id = this.selectedProgram.id
+            
             // check present activities
             this.selectedActivities = this.selectedProgram.activities
         }
@@ -130,25 +131,25 @@ export default {
 
 <style scoped>
 #modal-add {
-  background: rgba(0, 0, 0, 0.2);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: 10000;
-  display: flex;
-  align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
 }
 .container {
-  border: solid 1px #ccc;
-  border-radius: 5px;
-  width: 85%;
-  background: #fff;
-  margin: auto;
-  -webkit-box-shadow: 3px 3px 5px #ccc;
-  -moz-box-shadow: 3px 3px 5px #ccc;
-  box-shadow: 3px 3px 5px #ccc;
+    border: solid 1px #ccc;
+    border-radius: 5px;
+    width: 85%;
+    background: #fff;
+    margin: auto;
+    -webkit-box-shadow: 3px 3px 5px #ccc;
+    -moz-box-shadow: 3px 3px 5px #ccc;
+    box-shadow: 3px 3px 5px #ccc;
 }
 
 #form-container {

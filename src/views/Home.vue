@@ -40,28 +40,19 @@ import AddActivityModal from '@/components/AddActivityModal'
 import db from '@/components/firebaseInit.js'
 
 export default {
-  name: 'Home',
-  components: {
-    Programs,
-    AddProgramModal,
-    AddActivityModal,
-  },
-  data () {
-    return {
-        activities: [],
-        programs: [],
-        programModalOpen: false,
-        activityModalOpen: false,
-        selectedProgram: null
-    }
-  },
-    watch: {
-        selectedProgram (val) {
-            // if (val) {
-            //     this.programModalOpen = true
-            // } else {
-            //     this.programModalOpen = false
-            // }
+    name: 'Home',
+    components: {
+        Programs,
+        AddProgramModal,
+        AddActivityModal,
+    },
+    data () {
+        return {
+            activities: [],
+            programs: [],
+            programModalOpen: false,
+            activityModalOpen: false,
+            selectedProgram: null
         }
     },
     methods: {
@@ -77,7 +68,7 @@ export default {
             this.programModalOpen = false
             this.activityModalOpen = false
         },
-        saveToActivities(val) {
+        saveToActivities (val) {
             this.activities = [
                 ...this.activities, val
             ]
@@ -136,27 +127,27 @@ export default {
 
 <style scoped>
 .modal-btn-container {
-  padding: 1em;
+    padding: 1em;
 }
 
 .modal-btn-container button {
-  padding: 10px 20px;
-  background: #42b983;
-  color: #fff;
-  font-weight: 600;
-  font-size: 14px;
-  border: 1px solid;
-  border-radius: 20px;
-  cursor: pointer;
+    padding: 10px 20px;
+    background: #42b983;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid;
+    border-radius: 20px;
+    cursor: pointer;
 }
 
 .modal-btn-container button:hover {
-  background: #ddffdd;
-  border: 1px solid #42b983;
-  color: #42b983;
+    background: #ddffdd;
+    border: 1px solid #42b983;
+    color: #42b983;
 }
 
 .modal-btn-container button:active, .modal-btn-container button:focus {
-  outline: none;
+    outline: none;
 }
 </style>
