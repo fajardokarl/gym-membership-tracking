@@ -12,16 +12,18 @@
         ADD ACTIVITY
       </button>
     </div>
-    <Programs
-        v-for="program in programs" :key="program.id"
-        :program="program"
-        @selectProgram="selectProgram"
-    />
+    <div class="program-wrapper">
+        <Programs
+            v-for="program in programs" :key="program.id"
+            :program="program"
+            @selectProgram="selectProgram"
+        />
+    </div>
     <AddProgramModal
-      v-if="programModalOpen"
-      :activities="activities"
-      :selectedProgram="selectedProgram"
-      @close="closeModal"
+        v-if="programModalOpen"
+        :activities="activities"
+        :selectedProgram="selectedProgram"
+        @close="closeModal"
     />
     <AddActivityModal
         v-if="activityModalOpen"
@@ -100,6 +102,7 @@ export default {
         .catch (err => {
             console.error(err)
         })
+        
         db.collection('programs').get()
             .then (querySnapshot => {
                 querySnapshot.forEach(doc => {
@@ -128,6 +131,14 @@ export default {
 <style scoped>
 .modal-btn-container {
     padding: 1em;
+}
+.program-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+#programs {
+    grid-column: 1/2;
 }
 
 .modal-btn-container button {
