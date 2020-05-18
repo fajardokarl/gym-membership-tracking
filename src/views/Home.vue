@@ -1,16 +1,8 @@
 <template>
   <div class="home">
     <div class="modal-btn-container">
-      <button
-        @click="openModal"
-      >
-        ADD PROGRAM
-      </button>
-      <button
-        @click="openActivityModal"
-      >
-        ADD ACTIVITY
-      </button>
+      <button @click="openModal"> ADD PROGRAM </button>
+      <button @click="openActivityModal"> ADD ACTIVITY </button>
     </div>
     <div class="program-wrapper">
         <Programs

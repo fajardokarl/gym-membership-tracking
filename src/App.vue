@@ -9,11 +9,13 @@
 </template>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap');
+
 body {
   margin: 0;
 }
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -42,14 +44,19 @@ body {
   text-transform: uppercase;
   cursor: pointer;
 }
+
+.btn-container .close:hover {
+    background: rgb(224, 78, 78);
+}
+
 .btn-container button:active, .btn-container button:focus {
   outline: none;
   border: solid 1px #1aee00;
   transition: border ease-out .2s;
 }
 
-.btn-container > button:hover {
-  background: #7dee7f !important;
+.btn-container button:hover {
+  background: #7dee7f;
   color: white;
 }
 

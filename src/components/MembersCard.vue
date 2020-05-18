@@ -1,9 +1,9 @@
 <template>
     <div id="add-member">
         <div class="profile-container">
-            <div class="image-container">
+            <!-- <div class="image-container">
                 <img src="#" alt="Profile">
-            </div>
+            </div> -->
             <div class="detials-container">
                 <h2>{{member.fullname}}</h2>
                 <!-- TODO: Replace all dummy data with actual data -->
@@ -29,13 +29,12 @@
             <p>Active Program:</p>
             <!-- TODO: Make data dynamic, use v-for -->
             <div>
-                <span>
-                    <p>Until Apr 7 2020</p>
-                    <h4>Pilates training</h4>
-                </span>
-                <span>
-                    <p>Until Apr 7 2020</p>
-                    <h4>Pilates training</h4>
+                <span
+                    v-for="activeProgram in activePrograms"
+                    :key="activeProgram.id"
+                >
+                    <p>Until {{ activeProgram.date_end }}</p>
+                    <h4>{{ activeProgram.program_name }}</h4>
                 </span>
             </div>
         </div>
@@ -44,6 +43,7 @@
 
 <script>
 /* eslint-disable */
+import moment from 'moment'
 
 export default {
     name: 'Members',
@@ -54,10 +54,16 @@ export default {
         latestBmi () {
             const bmi = this.member.bmi[this.member.bmi.length - 1]
             return bmi
+        },
+        activePrograms () {
+            // return Array for active date base of current date with modified date_end
+            const activePrograms = this.member.programsTaken.filter(v => {
+                const d = moment(v.date_end.toDate())
+                v.date_end = d.format('YYYY-MM-DD')
+                return moment().isBefore(v.date_end)
+            })
+            return activePrograms
         }
-    },
-    mounted () {
-        console.log(this.latestBmi.height)
     }
 }
 </script>
