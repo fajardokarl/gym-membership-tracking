@@ -121,9 +121,7 @@ export default {
 </script>
 
 <style scoped>
-.modal-btn-container {
-    padding: 1em;
-}
+
 .program-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -133,24 +131,4 @@ export default {
     grid-column: 1/2;
 }
 
-.modal-btn-container button {
-    padding: 10px 20px;
-    background: #42b983;
-    color: #fff;
-    font-weight: 600;
-    font-size: 14px;
-    border: 1px solid;
-    border-radius: 20px;
-    cursor: pointer;
-}
-
-.modal-btn-container button:hover {
-    background: #ddffdd;
-    border: 1px solid #42b983;
-    color: #42b983;
-}
-
-.modal-btn-container button:active, .modal-btn-container button:focus {
-    outline: none;
-}
 </style>

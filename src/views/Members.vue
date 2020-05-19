@@ -11,7 +11,9 @@
             />
         </div>
         <AddMemberModal
+            :programs="programs"
             v-if="isMemberModalOpen"
+            @close="closeMemberModal"
         />
     </div>
 </template>
@@ -32,12 +34,16 @@ export default {
     data () {
         return {
             members: [],
+            programs: [],
             isMemberModalOpen: false
         }
     },
     methods: {
         openMemberModal () {
             this.isMemberModalOpen = true
+        },
+        closeMemberModal () {
+            this.isMemberModalOpen = false
         }
     },
     mounted () {
@@ -58,13 +64,34 @@ export default {
                     ...this.members,
                     data
                 ]
-                console.log(this.members)
+            })
+        })
+        .catch (err => {
+            console.error(err)
+        })
+
+        db.collection('programs').get()
+        .then (querySnapshot => {
+            querySnapshot.forEach(doc => {
+                const data = {
+                    'id': doc.id,
+                    'code': doc.data().program_code,
+                    'name': doc.data().name,
+                    'description': doc.data().description,
+                    'activities': doc.data().activities
+                }
+
+                this.programs = [
+                    ...this.programs,
+                    data
+                ]
                 
             })
         })
         .catch (err => {
             console.error(err)
-        })    }
+        })
+    }
 }
 </script>
 
@@ -73,6 +100,7 @@ export default {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 15px;
+    grid-row-gap: 15px;
     margin: 15px;
 }
 </style>

@@ -44,7 +44,7 @@
   </div>
 </template>
 
-<script scoped>
+<script>
 /* eslint-disable */
 import db from '@/components/firebaseInit.js'
 
@@ -70,9 +70,9 @@ export default {
             this.$emit('close')
         },
         addProgram () {
-            const programRef = db.collection('programs').doc(this.program_id)
             // Add document if programRef does not exist
-            if ( this.program_code && this.name && this.description && this.activities.length) {
+            if (this.program_code && this.name && this.description && this.activities.length) {
+                const programRef = db.collection('programs').doc(this.program_id)
                 programRef.set({
                     program_code: this.program_code,
                     name: this.name,
@@ -121,7 +121,6 @@ export default {
             this.name = this.selectedProgram.name
             this.description = this.selectedProgram.description
             this.program_id = this.selectedProgram.id
-            
             // check present activities
             this.selectedActivities = this.selectedProgram.activities
         }
@@ -185,6 +184,10 @@ export default {
     grid-column: 1/4;
     display: flex;
     justify-content: space-between;    
+}
+
+span.activity-pill {
+    white-space: pre;
 }
 
 .activity-pill label {
