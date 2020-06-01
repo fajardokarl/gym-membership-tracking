@@ -5,7 +5,17 @@
                 <img src="#" alt="Profile">
             </div> -->
             <div class="detials-container">
-                <h2>{{member.fullname}}</h2>
+                <div class="card-header">
+                    <h2>{{member.fullname}}</h2>
+                    <span>
+                        <button
+                            type="button"
+                            @click="editMember"
+                        >
+                        EDIT
+                        </button>
+                    </span>
+                </div>
                 <!-- TODO: Replace all dummy data with actual data -->
                 <span class="single-data-container">
                     <p>Height</p>
@@ -49,6 +59,11 @@ export default {
     name: 'Members',
     props: {
         member: Object
+    },
+    methods: {
+        editMember () {
+            this.$emit('editMember', this.member)
+        }
     },
     computed: {
         latestBmi () {
@@ -102,15 +117,39 @@ export default {
     grid-template-columns: repeat(4, 1fr);
 }
 
-.detials-container h2 {
+.card-header {
     grid-column: 1/5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h2 {
     font-size: 30px;
     color: #292929;
     margin: 5px 0;
 }
 
+.card-header span button {
+    background: none;
+    border: none;
+    border-radius: 15px;
+    font-weight: 700;
+    padding: 8px 15px;
+    color: #555;
+    cursor: pointer;
+    transition: background .3s ease-in-out;
+}
+
+.card-header span button:hover {
+    background: #DFFFE6;
+}
+.card-header span button:active, .card-header span button:focus {
+    outline: none;
+}
+
 .single-data-container {
-    text-align: center;
+    text-align: start;
 }
 
 .single-data-container p {

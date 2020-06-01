@@ -8,10 +8,12 @@
                 v-for="member in members"
                 :key="member.id"
                 :member="member"
+                @editMember="editMember"
             />
         </div>
         <AddMemberModal
             :programs="programs"
+            :selectedMember="selectedMember"
             v-if="isMemberModalOpen"
             @close="closeMemberModal"
         />
@@ -35,7 +37,8 @@ export default {
         return {
             members: [],
             programs: [],
-            isMemberModalOpen: false
+            isMemberModalOpen: false,
+            selectedMember: null
         }
     },
     methods: {
@@ -43,7 +46,13 @@ export default {
             this.isMemberModalOpen = true
         },
         closeMemberModal () {
+            this.selectedMember = null
+
             this.isMemberModalOpen = false
+        },
+        editMember (member) {
+            this.selectedMember = member
+            this.isMemberModalOpen = true
         }
     },
     mounted () {

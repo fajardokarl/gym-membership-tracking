@@ -5,17 +5,16 @@
                 <h1>
                     Add Member
                 </h1>
+                {{ memberId }}
                 <div class="main-form">
                     <div class="left-info">
                         <div class="input-text">
                             <label for="fullname">Fullname</label>
                             <input type="text" id="fullname" name="fullname" v-model="fullname">
-                            {{fullname}}
                         </div>
                         <div class="input-text">
                             <label for="birthdate">Birthdate</label>
                             <input type="date" id="birthdate" name="birthdate" v-model="birthdate">
-                            {{birthdate}}
                         </div>
                         <div class="input-text">
                             <label for="email">Email</label>
@@ -35,22 +34,22 @@
                             <div class="bmi-left">
                                 <div class="input-text">
                                     <label for="address">Height (cm)</label>
-                                    <input type="number" id="address" name="address" v-model="bmi.height">
+                                    <input type="number" id="address" name="address" v-model="height">
                                 </div>
                                 <div class="input-text">
                                     <label for="address">Weight (kg)</label>
-                                    <input type="number" id="address" name="address" v-model="bmi.weight">
+                                    <input type="number" id="address" name="address" v-model="weight">
                                 </div>
                             </div>
                             <div class="bmi-right">
                                 <div class="bmi-left">
                                     <div class="input-text">
                                         <label for="address">Waistline (in)</label>
-                                        <input type="number" id="address" name="address" v-model="bmi.waistline">
+                                        <input type="number" id="address" name="address" v-model="waistline">
                                     </div>
                                     <div class="input-text">
                                         <label for="address">Bodyfat (%)</label>
-                                        <input type="number" id="address" name="address" v-model="bmi.bodyfat">
+                                        <input type="number" id="address" name="address" v-model="bodyfat">
                                     </div>
                                 </div>
                             </div>
@@ -109,10 +108,12 @@
 import db from '@/components/firebaseInit.js'
 import moment from 'moment'
 
+
 export default {
     name: 'AddMemberModal',
     props: {
-        programs: Array
+        programs: Array,
+        selectedMember: Object
     },
     data () {
         return {
@@ -122,13 +123,14 @@ export default {
             email: null,
             contact_number: null,
             programs_taken: null,
-            bmi: {
-                date: null,
-                bodyfat: null,
-                height: null,
-                waistline: null, 
-                weight: null 
-            },
+            // bmi: {
+                
+            // },
+            date: null,
+            bodyfat: null,
+            height: null,
+            waistline: null, 
+            weight: null,
             selectedProgram: [],
             memberId: '',
             isSaveAndClose: false
@@ -137,19 +139,29 @@ export default {
     methods: {
         addMember () {
             const dNow = new Date()
-            this.bmi.date = dNow
+            this.date = dNow
 
             if (this.fullname && this.address && this.birthdate && this.email && this.contact_number) {
-                const memberRef = db.collection('Members').doc()
-                memberRef.set({
+                const memberRef = db.collection('Members').doc(this.memberId)
+                const data = {
                     name: this.fullname,
                     address: this.address,
                     birthdate: new Date(this.birthdate),
                     email: this.email,
                     contact_number: this.contact_number,
                     programs_taken: this.selectedProgram,
-                    bmi: [this.bmi],
-                })
+                }
+                if (this.memberId) {
+                    data.bmi = [{
+                        date: this.date,
+                        bodyfat: this.bodyfat,
+                        height: this.height,
+                        waistline: this.waistline,
+                        weight: this.weight,
+                    }]
+                }
+
+                memberRef.set(data)
                 .then(docRef => {
                     this.resetFields()
                     document.querySelector('#member-form').reset()
@@ -174,6 +186,7 @@ export default {
         closeMemberModal () {
             this.$emit('close')
                 // document.querySelector('#member-form').reset()
+            this.resetFields ()
         },
         resetFields () {
             this.fullname = null
@@ -182,11 +195,11 @@ export default {
             this.email = null
             this.contact_number = null
             this.programs_taken = null
-            this.bmi.date = null
-            this.bmi.bodyfat = null
-            this.bmi.height = null
-            this.bmi.waistline = null
-            this.bmi.weight = null
+            this.date = null
+            this.bodyfat = null
+            this.height = null
+            this.waistline = null
+            this.weight = null
             this.selectedProgram = []
             
         },
@@ -215,7 +228,22 @@ export default {
         }
     },
     mounted () {
-        
+        if (this.selectedMember) {
+            const bmi = this.selectedMember.bmi.slice(-1)[0]
+            this.date = bmi.date,
+            this.bodyfat = bmi.bodyfat,
+            this.height = bmi.height,
+            this.waistline = bmi.waistline, 
+            this.weight = bmi.weight 
+
+            this.fullname = this.selectedMember.fullname
+            this.address = this.selectedMember.address
+            this.birthdate = moment(this.selectedMember.birthdate).format('YYYY-MM-DD')
+            this.email = this.selectedMember.email
+            this.contact_number = this.selectedMember.contact_number
+            
+            this.memberId = this.selectedMember.id
+        }
     }
 }
 </script>
@@ -324,7 +352,7 @@ h1 {
 
 .program-pill:checked ~ label {
     background: #11a536;
-    border: solid 2px #555;
+    border: solid 2px #11a536;
     color: #fff;
 }
 
