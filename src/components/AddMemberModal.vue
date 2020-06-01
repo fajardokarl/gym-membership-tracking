@@ -107,6 +107,7 @@
 /* eslint-disable */
 import db from '@/components/firebaseInit.js'
 import moment from 'moment'
+import firebase from 'firebase/app'
 
 
 export default {
@@ -132,7 +133,7 @@ export default {
             waistline: null, 
             weight: null,
             selectedProgram: [],
-            memberId: '',
+            memberId: null,
             isSaveAndClose: false
         }
     },
@@ -142,7 +143,7 @@ export default {
             this.date = dNow
 
             if (this.fullname && this.address && this.birthdate && this.email && this.contact_number) {
-                const memberRef = db.collection('Members').doc(this.memberId)
+                const memberRef = this.memberId ? db.collection('Members').doc(this.memberId) : db.collection('Members').doc()
                 const data = {
                     name: this.fullname,
                     address: this.address,
@@ -151,15 +152,14 @@ export default {
                     contact_number: this.contact_number,
                     programs_taken: this.selectedProgram,
                 }
-                if (this.memberId) {
-                    data.bmi = [{
-                        date: this.date,
-                        bodyfat: this.bodyfat,
-                        height: this.height,
-                        waistline: this.waistline,
-                        weight: this.weight,
-                    }]
-                }
+
+                data.bmi = firebase.firestore.FieldValue.arrayUnion({
+                    date: this.date,
+                    bodyfat: this.bodyfat,
+                    height: this.height,
+                    waistline: this.waistline,
+                    weight: this.weight,
+                })
 
                 memberRef.set(data)
                 .then(docRef => {
@@ -225,6 +225,7 @@ export default {
                     }
                 ]
             }
+            console.log(this.selectedProgram)
         }
     },
     mounted () {
@@ -244,6 +245,7 @@ export default {
             
             this.memberId = this.selectedMember.id
         }
+        
     }
 }
 </script>

@@ -72,7 +72,7 @@ export default {
         addProgram () {
             // Add document if programRef does not exist
             if (this.program_code && this.name && this.description && this.activities.length) {
-                const programRef = db.collection('programs').doc(this.program_id)
+                const programRef = this.program_id ? db.collection('programs').doc(this.program_id) : db.collection('programs').doc()
                 programRef.set({
                     program_code: this.program_code,
                     name: this.name,

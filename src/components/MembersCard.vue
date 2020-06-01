@@ -54,6 +54,7 @@
 <script>
 /* eslint-disable */
 import moment from 'moment'
+import firebase from 'firebase/app'
 
 export default {
     name: 'Members',

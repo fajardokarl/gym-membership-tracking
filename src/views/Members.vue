@@ -78,7 +78,6 @@ export default {
         .catch (err => {
             console.error(err)
         })
-
         db.collection('programs').get()
         .then (querySnapshot => {
             querySnapshot.forEach(doc => {
